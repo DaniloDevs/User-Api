@@ -7,3 +7,17 @@ Content-Type: application/json
      "email": "test@exp.com", 
      "password": "12345"
 }
+
+###
+
+POST http://localhost:3031/login
+Content-Type: application/json
+
+{ 
+     "email": "test@exp.com", 
+     "password": "12345"
+}
+
+###
+
+GET http://localhost:3031/users/b40e8988-561b-4b18-b22a-6858a481a0e7

@@ -8,7 +8,7 @@ import { z } from "zod";
 export async function GetUserById(server: FastifyInstance) {
      server
           .withTypeProvider<ZodTypeProvider>()
-          .post("/users/:userId", {
+          .get("/users/:userId", {
                schema: {
                     params: z.object({
                          userId: z.string().uuid()
@@ -25,8 +25,9 @@ export async function GetUserById(server: FastifyInstance) {
                     })
                }
 
-               return reply.status(201).send({
-                    user_Id: user.id
+               return reply.status(200).send({
+                    Name: user.name,
+                    Email: user.email,
                })
           })
 }
