@@ -1,22 +1,16 @@
 import fastifyCookie from "@fastify/cookie";
 import fastifyJwt from "@fastify/jwt";
+import { Routes } from "application/server";
 import fastify from "fastify";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
-import { GetUserById } from "routes/getUserById";
-import { Login } from "routes/login";
-import { Register } from "routes/register";
+
 
 export const server = fastify()
 
 
-// ROTAS
-server.get("/", () => "Server Running!!")
-server.register(Register)
-server.register(Login)
-server.register(GetUserById)
-
-
 try {
+     server.register(Routes)
+
      server.setValidatorCompiler(validatorCompiler);
      server.setSerializerCompiler(serializerCompiler);
      
