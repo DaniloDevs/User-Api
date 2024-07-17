@@ -17,8 +17,7 @@ export async function AuthRoutes(server: FastifyInstance) {
             }
         }, async (request, reply) => {
             const { name, email, password } = request.body
-
-
+            
             const user = await prisma.users.create({
                 data: {
                     name,
@@ -73,6 +72,15 @@ export async function AuthRoutes(server: FastifyInstance) {
                     Code: "Unauthorized Access"
                 })
             }
+        })
 
+    server
+        .withTypeProvider<ZodTypeProvider>()
+        .post("/logout", async (request, reply) => {
+            reply.clearCookie("token")
+
+            return reply.status(200).send({
+                message: "logout successfully!"
+            })
         })
 }

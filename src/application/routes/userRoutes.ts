@@ -81,4 +81,30 @@ export async function UserRoutes(server: FastifyInstance) {
             })
 
         })
+
+    server
+        .withTypeProvider<ZodTypeProvider>()
+        .put("/users/:userId/delete", {
+            schema: {
+                params: z.object({
+                    userId: z.string().uuid()
+                }),
+            }
+        }, async (request, reply) => {
+            const { userId } = request.params
+
+            const user = await prisma.users.findUnique({ where: { id: userId } })
+
+            if (!user) {
+                return reply.status(400).send({
+                    Message: "User not found!"
+                })
+            }
+
+            return reply.status(200).send({
+                Message: 'The user has been deleted'
+            })
+
+        })
+
 }

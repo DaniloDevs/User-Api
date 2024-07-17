@@ -11,7 +11,7 @@
     "esModuleInterop": true,
     "paths": {
       "@/connection/*": [
-        "./src/infra/connection/*"
+        "./src/infrastructure/connection/*"
       ],
       "@/routes/*": [
         "./src/application/routes/*"
