@@ -13,6 +13,9 @@
       "@/connection/*": [
         "./src/infrastructure/connection/*"
       ],
+      "@/lib/*": [
+        "./src/infrastructure/lib/*"
+      ],
       "@/routes/*": [
         "./src/application/routes/*"
       ],

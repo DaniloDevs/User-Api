@@ -1,4 +1,5 @@
 import { prisma } from "@/connection/prisma";
+import { VerifyToken } from "@/lib/verifyToken";
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
@@ -14,6 +15,8 @@ export async function UserRoutes(server: FastifyInstance) {
                 })
             }
         }, async (request, reply) => {
+            await VerifyToken(request, reply, server)
+
             const { userId } = request.params
 
             const user = await prisma.users.findUnique({ where: { id: userId } })
@@ -44,6 +47,9 @@ export async function UserRoutes(server: FastifyInstance) {
                 })
             }
         }, async (request, reply) => {
+            await VerifyToken(request, reply, server)
+
+
             const { userId } = request.params
 
             const user = await prisma.users.findUnique({ where: { id: userId } })
@@ -91,6 +97,8 @@ export async function UserRoutes(server: FastifyInstance) {
                 }),
             }
         }, async (request, reply) => {
+            await VerifyToken(request, reply, server)
+
             const { userId } = request.params
 
             const user = await prisma.users.findUnique({ where: { id: userId } })

@@ -20,4 +20,9 @@ Content-Type: application/json
 
 ###
 
+POST http://localhost:3031/logout
+
+
+###
+
 GET http://localhost:3031/users/b40e8988-561b-4b18-b22a-6858a481a0e7
