@@ -1,5 +1,7 @@
 import { prisma } from "@/connection/prisma";
+import { GetUserByToken } from "@/lib/GetUserByToken";
 import { VerifyToken } from "@/lib/verifyToken";
+import { Users } from "@prisma/client";
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
@@ -17,15 +19,7 @@ export async function UserRoutes(server: FastifyInstance) {
         }, async (request, reply) => {
             await VerifyToken(request, reply, server)
 
-            const { userId } = request.params
-
-            const user = await prisma.users.findUnique({ where: { id: userId } })
-
-            if (!user) {
-                return reply.status(400).send({
-                    Message: "User not found!"
-                })
-            }
+            const user = await GetUserByToken(request, reply, server)
 
             return reply.status(200).send({
                 Name: user.name,
@@ -49,16 +43,7 @@ export async function UserRoutes(server: FastifyInstance) {
         }, async (request, reply) => {
             await VerifyToken(request, reply, server)
 
-
-            const { userId } = request.params
-
-            const user = await prisma.users.findUnique({ where: { id: userId } })
-
-            if (!user) {
-                return reply.status(400).send({
-                    Message: "User not found!"
-                })
-            }
+            const user = await GetUserByToken(request, reply, server)
 
             const { name, email, password } = request.body
 
@@ -73,7 +58,7 @@ export async function UserRoutes(server: FastifyInstance) {
             }
 
             const newUser = await prisma.users.update({
-                where: { id: userId },
+                where: { id: user?.id },
                 data: {
                     name,
                     email,
@@ -99,16 +84,9 @@ export async function UserRoutes(server: FastifyInstance) {
         }, async (request, reply) => {
             await VerifyToken(request, reply, server)
 
-            const { userId } = request.params
+            const user = await GetUserByToken(request, reply, server)
 
-            const user = await prisma.users.findUnique({ where: { id: userId } })
-
-            if (!user) {
-                return reply.status(400).send({
-                    Message: "User not found!"
-                })
-            }
-
+            await prisma.users.delete({ where: { id: user.id } })
             return reply.status(200).send({
                 Message: 'The user has been deleted'
             })
