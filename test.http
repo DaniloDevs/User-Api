@@ -3,9 +3,9 @@ POST http://localhost:3031/register
 Content-Type: application/json
 
 {
-     "name": "as", 
-     "email": "te", 
-     "password": "12345789123456789"
+     "name": "Danilo", 
+     "email": "exl@gmail.vom", 
+     "password": "1234"
 }
 
 ###
@@ -14,7 +14,7 @@ POST http://localhost:3031/login
 Content-Type: application/json
 
 { 
-     "email": "test@exp.com", 
+     "email": "exl@gmail.vom", 
      "password": "12345"
 }
 
@@ -25,4 +25,18 @@ POST http://localhost:3031/logout
 
 ###
 
-GET http://localhost:3031/users/b40e8988-561b-4b18-b22a-6858a481a0e7
+GET http://localhost:3031/users/230619da-0f20-4a54-8e27-0ffa805c705d
+
+###
+
+PUT  http://localhost:3031/users/b40e8988-561b-4b18-b22a-6858a481a0e7/update
+Content-Type: application/json
+
+{ 
+     "email": "test@hdhdhd.com"
+}
+
+###
+
+PUT  http://localhost:3031/users/b40e8988-561b-4b18-b22a-6858a481a0e7/delete
+

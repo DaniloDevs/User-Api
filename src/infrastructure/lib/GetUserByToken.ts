@@ -1,15 +1,15 @@
 import { prisma } from "@/connection/prisma";
-import { Users } from "@prisma/client";
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { FastifyReply } from "fastify";
 
-export async function GetUserByToken(request: FastifyRequest, reply: FastifyReply, server: FastifyInstance) {
-     const { token } = request.cookies as { token: string }
-
-     const decryptedToken = server.jwt.verify(token)
-
-     const { id } = decryptedToken as { id: string }
+export async function GetUserById(id: string, reply: FastifyReply) {
 
      const user = await prisma.users.findUnique({ where: { id } })
 
-     return user  as Users
+     if (!user) {
+          return reply.status(400).send({
+               Message: "User not fund"
+          })
+     }
+
+     return user
 }

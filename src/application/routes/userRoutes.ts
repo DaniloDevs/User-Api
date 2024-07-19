@@ -1,13 +1,12 @@
-import { prisma } from "@/connection/prisma";
-import { GetUserByToken } from "@/lib/GetUserByToken";
-import { VerifyToken } from "@/lib/verifyToken";
-import { Users } from "@prisma/client";
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
+import { UserController } from "../controller/userController";
 
 
 export async function UserRoutes(server: FastifyInstance) {
+    const controller = new UserController()
+
     server
         .withTypeProvider<ZodTypeProvider>()
         .get("/users/:userId", {
@@ -16,16 +15,7 @@ export async function UserRoutes(server: FastifyInstance) {
                     userId: z.string().uuid()
                 })
             }
-        }, async (request, reply) => {
-            await VerifyToken(request, reply, server)
-
-            const user = await GetUserByToken(request, reply, server)
-
-            return reply.status(200).send({
-                Name: user.name,
-                Email: user.email,
-            })
-        })
+        }, controller.getUser.bind(controller))
 
     server
         .withTypeProvider<ZodTypeProvider>()
@@ -40,38 +30,7 @@ export async function UserRoutes(server: FastifyInstance) {
                     password: z.string().min(4).max(12).optional()
                 })
             }
-        }, async (request, reply) => {
-            await VerifyToken(request, reply, server)
-
-            const user = await GetUserByToken(request, reply, server)
-
-            const { name, email, password } = request.body
-
-            if (
-                user.name === name &&
-                user.email === email &&
-                user.password === password
-            ) {
-                return reply.status(400).send({
-                    Message: "No changes were found"
-                })
-            }
-
-            const newUser = await prisma.users.update({
-                where: { id: user?.id },
-                data: {
-                    name,
-                    email,
-                    password
-                }
-            })
-
-            return reply.status(200).send({
-                Message: "All information has been changed successfully",
-                User: newUser
-            })
-
-        })
+        }, controller.updateUser.bind(controller))
 
     server
         .withTypeProvider<ZodTypeProvider>()
@@ -81,16 +40,6 @@ export async function UserRoutes(server: FastifyInstance) {
                     userId: z.string().uuid()
                 }),
             }
-        }, async (request, reply) => {
-            await VerifyToken(request, reply, server)
-
-            const user = await GetUserByToken(request, reply, server)
-
-            await prisma.users.delete({ where: { id: user.id } })
-            return reply.status(200).send({
-                Message: 'The user has been deleted'
-            })
-
-        })
+        }, controller.deleteUser.bind(controller))
 
 }
